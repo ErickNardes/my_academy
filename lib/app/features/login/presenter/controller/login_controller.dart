@@ -19,6 +19,10 @@ class LoginController extends Store<LoginState> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  void setVisibilityPass() {
+    update(state.copyWith(visibilitPass: !state.visibilitPass));
+  }
+
   Future<bool> signUpWithEmailAndPassword() async {
     update(state.copyWith(isSucessCreateAccount: true));
     final params = CreateAccountParams(

@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: ThemeColors.backgroudColor,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const AppNameWidget(
             textSize: 44,

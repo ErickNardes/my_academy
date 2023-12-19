@@ -21,12 +21,14 @@ class _FormLoginWidgetState extends State<FormLoginWidget> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final loginKey = GlobalKey<FormState>();
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
       child: Form(
+        key: loginKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
           children: [
             TextFormField(
               controller: widget.controller.loginEmailController,
@@ -51,36 +53,63 @@ class _FormLoginWidgetState extends State<FormLoginWidget> {
                     borderSide:
                         BorderSide(color: ThemeColors.prymaryGreenColor)),
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Preencha o Email para proseguir';
+                }
+                return null;
+              },
             ),
             SizedBox(
               height: size.height * 0.02,
             ),
-            TextFormField(
-              controller: widget.controller.loginPasswordController,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                fillColor: ThemeColors.prymaryGreenColor,
-                focusColor: ThemeColors.prymaryGreenColor,
-                hoverColor: ThemeColors.prymaryGreenColor,
-                labelStyle: const TextStyle(color: Colors.white),
-                prefixIcon: const Icon(
-                  Icons.password_outlined,
-                  color: ThemeColors.prymaryGreenColor,
-                ),
-                suffixIcon: IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.visibility)),
-                focusedBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                  borderSide: BorderSide(
-                      color: ThemeColors.prymaryGreenColor, width: 1.5),
-                ),
-                label: const Text('Senha'),
-                border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    borderSide:
-                        BorderSide(color: ThemeColors.prymaryGreenColor)),
-              ),
-            ),
+            ValueListenableBuilder(
+                valueListenable: widget.controller.selectState,
+                builder: (context, _, __) {
+                  return TextFormField(
+                    controller: widget.controller.loginPasswordController,
+                    style: const TextStyle(color: Colors.white),
+                    obscureText: widget.controller.state.visibilitPass,
+                    decoration: InputDecoration(
+                      fillColor: ThemeColors.prymaryGreenColor,
+                      focusColor: ThemeColors.prymaryGreenColor,
+                      hoverColor: ThemeColors.prymaryGreenColor,
+                      labelStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(
+                        Icons.password_outlined,
+                        color: ThemeColors.prymaryGreenColor,
+                      ),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            widget.controller.setVisibilityPass();
+                          },
+                          icon: Icon(
+                            widget.controller.state.visibilitPass
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: widget.controller.state.visibilitPass
+                                ? ThemeColors.prymaryGreenColor
+                                : Colors.white,
+                          )),
+                      focusedBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                        borderSide: BorderSide(
+                            color: ThemeColors.prymaryGreenColor, width: 1.5),
+                      ),
+                      label: const Text('Senha'),
+                      border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide:
+                              BorderSide(color: ThemeColors.prymaryGreenColor)),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Campo senha obrigatório';
+                      }
+                      return null;
+                    },
+                  );
+                }),
             SizedBox(
               height: size.height * 0.05,
             ),
@@ -89,12 +118,14 @@ class _FormLoginWidgetState extends State<FormLoginWidget> {
               width: size.width * 0.8,
               child: InkWell(
                   onTap: () async {
-                    final loginSuccess =
-                        await widget.controller.signInWithEmailAndPassword();
-                    if (loginSuccess) {
-                      Modular.to.navigate('/home_page', arguments: {
-                        'loginController': widget.controller,
-                      });
+                    if (loginKey.currentState!.validate()) {
+                      final loginSuccess =
+                          await widget.controller.signInWithEmailAndPassword();
+                      if (loginSuccess) {
+                        Modular.to.navigate('/home_page', arguments: {
+                          'loginController': widget.controller,
+                        });
+                      }
                     }
                   },
                   child: ScopedBuilder(
@@ -120,7 +151,7 @@ class _FormLoginWidgetState extends State<FormLoginWidget> {
                                       : Text(
                                           'Entrar',
                                           style: TextStyle(
-                                              color: Colors.white,
+                                              color: ThemeColors.backgroudColor,
                                               fontSize: size.width * 0.05),
                                         );
                                 })),

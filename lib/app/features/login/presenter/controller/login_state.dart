@@ -2,11 +2,11 @@
 import 'package:my_academy/app/features/login/presenter/models/user_model.dart';
 
 class LoginState {
-  final String nameUser;
+  final bool visibilitPass;
   final UserModelAuth userModelAuth;
   final bool isSucessCreateAccount;
   LoginState({
-    required this.nameUser,
+    required this.visibilitPass,
     required this.userModelAuth,
     required this.isSucessCreateAccount,
   });
@@ -14,11 +14,11 @@ class LoginState {
   factory LoginState.init() => LoginState(
         isSucessCreateAccount: false,
         userModelAuth: UserModelAuth(id: '', email: '', name: ''),
-        nameUser: '',
+        visibilitPass: false,
       );
 
   LoginState copyWith({
-    String? nameUser,
+    bool? visibilitPass,
     UserModelAuth? userModelAuth,
     bool? isSucessCreateAccount,
   }) {
@@ -26,7 +26,7 @@ class LoginState {
       isSucessCreateAccount:
           isSucessCreateAccount ?? this.isSucessCreateAccount,
       userModelAuth: userModelAuth ?? this.userModelAuth,
-      nameUser: nameUser ?? this.nameUser,
+      visibilitPass: visibilitPass ?? this.visibilitPass,
     );
   }
 }

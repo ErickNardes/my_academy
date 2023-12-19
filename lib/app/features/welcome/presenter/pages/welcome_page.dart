@@ -62,7 +62,7 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
           ),
           SizedBox(
-            height: size.height * 0.05,
+            height: size.height * 0.03,
           ),
           InkWell(
             onTap: () {
@@ -72,13 +72,13 @@ class _WelcomePageState extends State<WelcomePage> {
               width: size.width * 0.9,
               height: size.height * 0.06,
               decoration: BoxDecoration(
-                color: ThemeColors.backgroudColor,
-                borderRadius: BorderRadius.circular(22),
+                color: ThemeColors.prymaryColor,
+                borderRadius: BorderRadius.circular(32),
                 border: Border.all(color: ThemeColors.backgroudColor),
               ),
               child: Center(
                 child: Text(
-                  'Iniciar',
+                  'Começar',
                   style: TextStyle(
                       color: Colors.white, fontSize: size.width * 0.05),
                 ),
