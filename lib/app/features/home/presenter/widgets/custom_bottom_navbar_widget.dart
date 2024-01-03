@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:my_academy/app/features/exercices/controller/exercice_controller.dart';
+import 'package:my_academy/app/features/exercices/presenter/pages/form_page.dart';
 import 'package:my_academy/core/theme/theme_colors.dart';
 
 class CustomNavBarWidget extends StatefulWidget {
@@ -12,6 +15,7 @@ class CustomNavBarWidget extends StatefulWidget {
 class _CustomNavBarWidgetState extends State<CustomNavBarWidget> {
   @override
   Widget build(BuildContext context) {
+    final controller = Modular.get<ExerciceController>();
     final size = MediaQuery.of(context).size;
     return SizedBox(
       height: size.width * 0.15,
@@ -29,20 +33,26 @@ class _CustomNavBarWidgetState extends State<CustomNavBarWidget> {
               ThemeColors.prymaryGreenColor, // selected tab background color
           padding: const EdgeInsets.symmetric(
               horizontal: 20, vertical: 5), // navigation bar padding
-          tabs: const [
-            GButton(
+          tabs: [
+            const GButton(
               icon: Icons.home,
               text: 'Home',
             ),
             GButton(
               icon: Icons.rocket_launch_outlined,
               text: 'Explore',
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return FormPage();
+                }));
+              },
             ),
-            GButton(
+            const GButton(
               icon: Icons.poll_outlined,
               text: 'Performace',
             ),
-            GButton(
+            const GButton(
               icon: Icons.person_2_outlined,
               text: 'Profile',
             )

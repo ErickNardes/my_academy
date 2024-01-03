@@ -45,6 +45,8 @@ dependencies:
   flutter_svg: ^2.0.9
   google_nav_bar: ^5.0.6
   http: ^1.1.2
+  redacted: ^1.0.11
+  hasura_connect: ^5.0.0+3
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +74,7 @@ flutter:
     - lib/assets/images/
     - lib/assets/lottie/
     - lib/assets/icons/
+    - lib/assets/images/supino_reto_barra.gif
 
   # To add assets to your application, add an assets section, like this:
 

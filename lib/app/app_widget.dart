@@ -20,7 +20,6 @@ class _AppWidgetState extends State<AppWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
       routerConfig: Modular.routerConfig,
       theme: ThemeData(
         primaryColor: ThemeColors.prymaryGreenColor,

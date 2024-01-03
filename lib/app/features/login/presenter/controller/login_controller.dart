@@ -51,6 +51,15 @@ class LoginController extends Store<LoginState> {
           email: params.email,
           name: params.name,
         )));
+
+        final CollectionReference userCollection =
+            FirebaseFirestore.instance.collection('Users');
+        final userDocRef = userCollection.doc(user.uid);
+        final CollectionReference treinosCollection =
+            userDocRef.collection('treinos');
+        for (int i = 0; i < 7; i++) {
+          await treinosCollection.doc(i.toString()).set(Map<String, dynamic>());
+        }
       }
 
       update(state.copyWith(isSucessCreateAccount: false));

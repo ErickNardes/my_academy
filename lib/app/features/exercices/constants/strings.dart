@@ -1,2 +1,12 @@
-const getListExerciceString =
-    'https://wger.de/api/v2/exercise/search/?language=pt&term=';
+class HasuraExercicesQuery {
+  static const getAllListExercices = '''query MyQuery {
+  exercices {
+    category
+    descryption
+    difficulty
+    id
+    image_exercice
+    name
+  }
+}''';
+}

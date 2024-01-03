@@ -6,4 +6,5 @@ class ThemeColors {
 
   static const Color prymaryColor = Color.fromRGBO(25, 33, 38, 1);
   static const Color secundaryColor = Color.fromRGBO(19, 143, 146, 1);
+  static const Color secundaryColorText = Color.fromARGB(255, 177, 177, 177);
 }
