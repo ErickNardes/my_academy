@@ -7,12 +7,21 @@ import 'package:my_academy/app/features/exercices/repository/get_list_top_exerci
 import 'package:my_academy/app/features/exercices/repository/i_get_list_top_exercice_repository.dart';
 import 'package:my_academy/app/features/exercices/repository/i_training_repository.dart';
 import 'package:my_academy/app/features/exercices/repository/training_repository.dart';
+import 'package:my_academy/app/features/explore/presenter/controller/explore_controller.dart';
+import 'package:my_academy/app/features/explore/presenter/state/explore_state.dart';
+import 'package:my_academy/app/features/explore/repository/get_exercice_with_category.dart';
+import 'package:my_academy/app/features/explore/repository/i_get_exercice_with_category.dart';
 import 'package:my_academy/app/features/home/presenter/controller/home_controller.dart';
-import 'package:my_academy/app/features/home/presenter/pages/home_page.dart';
+import 'package:my_academy/app/features/home/presenter/pages/base_page.dart';
+import 'package:my_academy/app/features/home/presenter/pages/list_exercice_with_category_page.dart';
 import 'package:my_academy/app/features/login/presenter/controller/login_controller.dart';
 import 'package:my_academy/app/features/login/presenter/controller/login_state.dart';
 import 'package:my_academy/app/features/login/presenter/pages/create_account_page.dart';
 import 'package:my_academy/app/features/login/presenter/pages/login_page.dart';
+import 'package:my_academy/app/features/login/presenter/repository/get_user_with_firebase_id_repository.dart';
+import 'package:my_academy/app/features/login/presenter/repository/i_get_user_with_firebase_id_repository.dart';
+import 'package:my_academy/app/features/login/presenter/repository/i_insert_user_hasura_repository.dart';
+import 'package:my_academy/app/features/login/presenter/repository/insert_user_hasura_repository.dart';
 import 'package:my_academy/app/features/splash/pages/splash_page.dart';
 import 'package:my_academy/app/features/welcome/presenter/pages/welcome_page.dart';
 
@@ -20,8 +29,14 @@ class AppModule extends Module {
   @override
   void binds(Injector i) {
     //login
+    i.addLazySingleton<IGetUserWithFirebaseIdRepository>(
+        GetUserWithFirebaseIdRepository.new);
+    i.addLazySingleton<IInsertUserHasuraRepository>(
+        InsertUserHasuraRepository.new);
     i.addLazySingleton(LoginController.new);
     i.addLazySingleton(LoginState.new);
+    i.addLazySingleton<IGetExerciceWithCategory>(
+        GetExerciceWithCategoryRepository.new);
 
     //home
     i.addLazySingleton(HomeController.new);
@@ -38,6 +53,8 @@ class AppModule extends Module {
         GetListExerciceRepository.new);
     i.addLazySingleton(ExerciceController.new);
     i.addLazySingleton(ExerciceState.new);
+    i.addLazySingleton(ExploreState.new);
+    i.addLazySingleton(ExploreController.new);
   }
 
   @override
@@ -55,9 +72,17 @@ class AppModule extends Module {
     r.child('/create_account_page',
         child: (context) => const CreateAccountPage());
     r.child('/home_page',
-        child: (context) => HomePage(
+        child: (context) => BasePage(
               loginController: Modular.get<LoginController>(),
               exerciceController: Modular.get<ExerciceController>(),
+              exploreController: Modular.get<ExploreController>(),
             ));
+    r.child(
+      '/list_exercice_with_category',
+      child: (context) => ListExerciceWithCategoryPage(
+        exploreController: Modular.get<ExploreController>(),
+        exerciceController: Modular.get<ExerciceController>(),
+      ),
+    );
   }
 }

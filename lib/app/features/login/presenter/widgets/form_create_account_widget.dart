@@ -197,7 +197,7 @@ class _CreateAccountWidgetState extends State<CreateAccountWidget> {
                                       backgroundColor:
                                           ThemeColors.prymaryGreenColor,
                                     ));
-                                    Modular.to.pushNamed('home_page',
+                                    Modular.to.navigate('home_page',
                                         arguments: {
                                           'loginController': controller
                                         });

@@ -2,12 +2,18 @@
 import 'package:my_academy/app/features/exercices/model/exercice_model.dart';
 
 class ExerciceState {
+  int indexPage;
+  final bool isTrainingDay;
+  final String dayString;
   final List<ExerciceModel> listExercicesWithDay;
   final int dayIndex;
   final String daySelected;
   final List<ExerciceModel> listExercices;
   final ExerciceModel? selectExercice;
   ExerciceState({
+    required this.indexPage,
+    required this.isTrainingDay,
+    required this.dayString,
     required this.listExercicesWithDay,
     required this.dayIndex,
     required this.daySelected,
@@ -21,9 +27,15 @@ class ExerciceState {
         daySelected: 'Segunda-Feira',
         dayIndex: 0,
         listExercicesWithDay: [],
+        isTrainingDay: false,
+        dayString: '',
+        indexPage: 0,
       );
 
   ExerciceState copyWith({
+    int? indexPage,
+    String? dayString,
+    bool? isTrainingDay,
     List<ExerciceModel>? listExercicesWithDay,
     int? dayIndex,
     String? daySelected,
@@ -36,6 +48,9 @@ class ExerciceState {
       daySelected: daySelected ?? this.daySelected,
       dayIndex: dayIndex ?? this.dayIndex,
       listExercicesWithDay: listExercicesWithDay ?? this.listExercicesWithDay,
+      isTrainingDay: isTrainingDay ?? this.isTrainingDay,
+      dayString: dayString ?? this.dayString,
+      indexPage: indexPage ?? this.indexPage,
     );
   }
 }

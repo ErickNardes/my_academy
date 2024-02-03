@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 
 import 'package:my_academy/app/features/exercices/controller/exercice_state.dart';
 import 'package:my_academy/app/features/exercices/model/exercice_model.dart';
+import 'package:my_academy/app/features/exercices/params/get_list_exercice_day_params.dart';
+import 'package:my_academy/app/features/exercices/params/insert_training_params.dart';
 import 'package:my_academy/app/features/exercices/repository/i_get_list_top_exercice_repository.dart';
 import 'package:my_academy/app/features/exercices/repository/i_training_repository.dart';
 
@@ -24,6 +24,18 @@ class ExerciceController extends Store<ExerciceState> {
   final descriptionController = TextEditingController();
   final difficultyController = TextEditingController();
 
+  void setIndexPage(int index) {
+    update(state.copyWith(indexPage: index));
+  }
+
+  void setDayString(String day) {
+    update(state.copyWith(dayString: day));
+  }
+
+  void setIsTtrainingDay(bool value) {
+    update(state.copyWith(isTrainingDay: value));
+  }
+
   void setDaySelected(String day) {
     update(state.copyWith(daySelected: day));
   }
@@ -32,10 +44,12 @@ class ExerciceController extends Store<ExerciceState> {
     update(state.copyWith(dayIndex: index));
   }
 
-  // Future<void> getListExercicesWithDay() async {
-  //   final result = await iTrainingRepository.getListTrainingWithDay(0);
-  //   update(state.copyWith(listExercicesWithDay: result));
-  // }
+  Future<void> getListExercicesWithDay(GetListExercicesDayParams params) async {
+    final result = await iTrainingRepository.getListTrainingWithDay(params);
+    result.fold((l) => setError, (r) {
+      update(state.copyWith(listExercicesWithDay: r));
+    });
+  }
 
   Future<void> getListExercices() async {
     final result =
@@ -48,22 +62,8 @@ class ExerciceController extends Store<ExerciceState> {
     update(state.copyWith(selectExercice: exercice));
   }
 
-  Future<bool> addTrainingToDay(int dayIndex, String trainingId) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      final CollectionReference userCollection =
-          FirebaseFirestore.instance.collection('Users');
-      final userDocRef = userCollection.doc(user!.uid);
-
-      final CollectionReference treinosCollection =
-          userDocRef.collection('treinos');
-
-      await treinosCollection.doc(dayIndex.toString()).update({
-        'id': FieldValue.arrayUnion([trainingId])
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
+  Future<void> insertTraining(InsertTrainingParams params) async {
+    final result = await iTrainingRepository.insertTraining(params);
+    result.fold((l) => setError, (r) => r);
   }
 }

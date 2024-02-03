@@ -25,6 +25,7 @@ class _CardPopularityWidgetState extends State<CardPopularityWidget> {
     final size = MediaQuery.of(context).size;
     return InkWell(
       onTap: () {
+        widget.exerciceController.setIsTtrainingDay(false);
         widget.exerciceController.selectExercice(widget.exerciceModel);
         Modular.to.pushNamed('/details_exercice_page');
       },

@@ -1,9 +1,12 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, deprecated_member_use
+// ignore_for_file: public_member_api_docs, sort_constructors_first, deprecated_member_use, use_build_context_synchronously
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:intl/intl.dart';
 import 'package:my_academy/app/features/exercices/constants/enum.dart';
+import 'package:my_academy/app/features/exercices/params/get_list_exercice_day_params.dart';
 
-import 'package:my_academy/app/features/exercices/model/exercice_model.dart';
+import 'package:my_academy/app/features/exercices/params/insert_training_params.dart';
+import 'package:my_academy/app/features/login/presenter/controller/login_controller.dart';
 import 'package:my_academy/core/theme/theme_colors.dart';
 
 import '../../controller/exercice_controller.dart';
@@ -24,6 +27,7 @@ class _DetailsExercicePageState extends State<DetailsExercicePage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final exercice = widget.exerciceController.state.selectExercice;
+    final user = Modular.get<LoginController>();
     return Scaffold(
       backgroundColor: ThemeColors.prymaryColor,
       appBar: AppBar(
@@ -93,92 +97,125 @@ class _DetailsExercicePageState extends State<DetailsExercicePage> {
             SizedBox(
               height: size.height * 0.02,
             ),
-            ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                      barrierColor: Colors.grey.withOpacity(0.5),
-                      context: context,
-                      builder: (context) {
-                        return SizedBox(
-                          height: 300,
-                          child: Dialog(
-                            backgroundColor: Colors.white,
-                            child: ValueListenableBuilder(
-                                valueListenable:
-                                    widget.exerciceController.selectState,
-                                builder: (context, _, __) {
-                                  return Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(
-                                        height: size.width * 0.03,
-                                      ),
-                                      DropdownButton(
-                                          hint: Text(widget.exerciceController
-                                              .state.daySelected),
-                                          items: DaysOfWeekEnum.values.map((e) {
-                                            return DropdownMenuItem<
-                                                DaysOfWeekEnum>(
-                                              value: e,
-                                              child: Text(
-                                                  DaysOfWeekEnumExtension
-                                                      .convertEnumToString(e)),
-                                            );
-                                          }).toList(),
-                                          onChanged: (v) {
-                                            final text = DaysOfWeekEnumExtension
-                                                .convertEnumToString(v!);
-                                            widget.exerciceController
-                                                .setDaySelected(text);
-                                            widget.exerciceController
-                                                .setDayIndex(v.index);
-                                          }),
-                                      SizedBox(
-                                        height: size.width * 0.07,
-                                      ),
-                                      Image.network(exercice!.image),
-                                      SizedBox(
-                                        height: size.width * 0.07,
-                                      ),
-                                      Text(
-                                        exercice.name,
-                                        style: TextStyle(
-                                          fontFamily: 'Lato-Bold',
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: size.width * 0.05,
-                                        ),
-                                      ),
-                                      TextButton(
-                                          onPressed: () async {
-                                            // final addSucces = await widget
-                                            //     .exerciceController
-                                            //     .addTrainingToDay(
-                                            //         widget.exerciceController
-                                            //             .state.dayIndex,
-                                            //         exercice.id);
+            ValueListenableBuilder(
+                valueListenable: widget.exerciceController.selectState,
+                builder: (context, _, __) {
+                  return Visibility(
+                    visible: !widget.exerciceController.state.isTrainingDay,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                            barrierColor: Colors.grey.withOpacity(0.5),
+                            context: context,
+                            builder: (context) {
+                              return SizedBox(
+                                height: 300,
+                                child: Dialog(
+                                  backgroundColor: Colors.white,
+                                  child: ValueListenableBuilder(
+                                      valueListenable:
+                                          widget.exerciceController.selectState,
+                                      builder: (context, _, __) {
+                                        return Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SizedBox(
+                                              height: size.width * 0.03,
+                                            ),
+                                            DropdownButton(
+                                                hint: Text(widget
+                                                    .exerciceController
+                                                    .state
+                                                    .daySelected),
+                                                items: DaysOfWeekEnum.values
+                                                    .map((e) {
+                                                  return DropdownMenuItem<
+                                                      DaysOfWeekEnum>(
+                                                    value: e,
+                                                    child: Text(
+                                                        DaysOfWeekEnumExtension
+                                                            .convertEnumToString(
+                                                                e)),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (v) {
+                                                  final text =
+                                                      DaysOfWeekEnumExtension
+                                                          .convertEnumToString(
+                                                              v!);
+                                                  widget.exerciceController
+                                                      .setDaySelected(text);
+                                                  widget.exerciceController
+                                                      .setDayIndex(v.index);
+                                                }),
+                                            SizedBox(
+                                              height: size.width * 0.07,
+                                            ),
+                                            Image.network(exercice!.image),
+                                            SizedBox(
+                                              height: size.width * 0.07,
+                                            ),
+                                            Text(
+                                              exercice.name,
+                                              style: TextStyle(
+                                                fontFamily: 'Lato-Bold',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: size.width * 0.05,
+                                              ),
+                                            ),
+                                            TextButton(
+                                                onPressed: () async {
+                                                  final params =
+                                                      InsertTrainingParams(
+                                                    idUser: user.state
+                                                        .userHasuraModel!.id,
+                                                    idExercice: exercice.id,
+                                                    day: widget
+                                                        .exerciceController
+                                                        .state
+                                                        .daySelected
+                                                        .toLowerCase(),
+                                                  );
+                                                  await widget
+                                                      .exerciceController
+                                                      .insertTraining(params);
+                                                  final data = DateFormat(
+                                                      'EEEE', 'pt_BR');
 
-                                            // if (addSucces) {
-                                            //   Navigator.pop(context);
+                                                  final dataParams =
+                                                      GetListExercicesDayParams(
+                                                    day: data
+                                                        .format(DateTime.now()),
+                                                    idUser: user.state
+                                                        .userHasuraModel!.id,
+                                                  );
+                                                  widget.exerciceController
+                                                      .getListExercicesWithDay(
+                                                          dataParams);
 
-                                            //   ScaffoldMessenger.of(context)
-                                            //       .showSnackBar(const SnackBar(
-                                            //           content: Text(
-                                            //               'Treino Adicionado com Sucesso!!!')));
-                                            // }
-                                          },
-                                          child:
-                                              const Text('Adicionar Treino')),
-                                      SizedBox(
-                                        height: size.width * 0.07,
-                                      ),
-                                    ],
-                                  );
-                                }),
-                          ),
-                        );
-                      });
-                },
-                child: Text('Adicionar Treino'))
+                                                  Navigator.pop(context);
+
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(const SnackBar(
+                                                          content: Text(
+                                                              'Treino Adicionado com Sucesso!!!')));
+                                                },
+                                                child: const Text(
+                                                    'Adicionar Treino')),
+                                            SizedBox(
+                                              height: size.width * 0.07,
+                                            ),
+                                          ],
+                                        );
+                                      }),
+                                ),
+                              );
+                            });
+                      },
+                      child: Text('Adicionar Treino'),
+                    ),
+                  );
+                })
           ],
         ),
       ),

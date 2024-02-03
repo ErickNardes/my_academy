@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class ExerciceModel {
   final String name;
   final int id;
@@ -25,12 +22,5 @@ class ExerciceModel {
         image: map['image_exercice'],
         difficulty: map['difficulty'],
         description: map['descryption']);
-
-    //       category
-    // descryption
-    // difficulty
-    // id
-    // image_exercice
-    // name
   }
 }

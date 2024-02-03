@@ -1,13 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-
 import 'package:my_academy/app/features/exercices/controller/exercice_controller.dart';
 import 'package:my_academy/app/features/exercices/presenter/widgets/card_popularity_widget.dart';
+import 'package:my_academy/app/features/exercices/presenter/widgets/list_tile_training_day_widget.dart';
 import 'package:my_academy/app/features/home/presenter/widgets/custom_bottom_navbar_widget.dart';
 import 'package:my_academy/app/features/home/presenter/widgets/custom_search_home_widget.dart';
+
 import 'package:my_academy/app/features/login/presenter/controller/login_controller.dart';
+import 'package:my_academy/core/theme/theme_colors.dart';
 import 'package:redacted/redacted.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,49 +27,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  void initState() {
-    super.initState();
-
-    widget.exerciceController.getListExercices();
-    // widget.exerciceController.getListExercicesWithDay();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        backgroundColor: Colors.grey[50],
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Boa Noite',
-                    style: TextStyle(
-                      fontFamily: 'Lato-Bold',
-                      fontSize: size.width * 0.06,
-                    ),
-                  ),
-                  SizedBox(
-                    width: size.width * 0.02,
-                  ),
-                  SvgPicture.asset(
-                    'lib/assets/icons/fire_icon.svg',
-                    width: size.width * 0.06,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: size.width * 0.02,
-              ),
-            ],
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: size.width * 0.055),
@@ -154,11 +116,46 @@ class _HomePageState extends State<HomePage> {
                   fontSize: size.width * 0.05,
                 ),
               ),
+              SizedBox(
+                height: size.width * 0.03,
+              ),
+              ScopedBuilder(
+                onLoading: (context) => const Center(
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation(ThemeColors.prymaryColor),
+                  ),
+                ),
+                store: widget.exerciceController,
+                onState: (context, state) {
+                  return SizedBox(
+                    width: size.width,
+                    height: size.height * 0.3,
+                    child: ListView.separated(
+                        itemBuilder: (context, index) {
+                          final item = widget.exerciceController.state
+                              .listExercicesWithDay[index];
+                          return ListTileTrainingDayWidget(
+                            exerciceModel: item,
+                            onTap: () {
+                              widget.exerciceController.setIsTtrainingDay(true);
+                              widget.exerciceController.selectExercice(item);
+                              Modular.to.pushNamed('/details_exercice_page');
+                            },
+                          );
+                        },
+                        separatorBuilder: (context, _) => SizedBox(
+                              height: size.height * 0.02,
+                            ),
+                        itemCount: widget.exerciceController.state
+                            .listExercicesWithDay.length),
+                  );
+                },
+              )
             ],
           ),
         ),
       ),
-      bottomNavigationBar: const CustomNavBarWidget(),
     );
   }
 }
