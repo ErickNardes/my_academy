@@ -4,6 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:intl/intl.dart';
+import 'package:my_academy/app/features/performace/presenter/pages/perfomace_page.dart';
 import 'package:redacted/redacted.dart';
 
 import 'package:my_academy/app/features/exercices/controller/exercice_controller.dart';
@@ -88,6 +89,7 @@ class _BasePageState extends State<BasePage> {
         ),
       ),
       body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         children: [
           HomePage(
@@ -96,6 +98,12 @@ class _BasePageState extends State<BasePage> {
           ExplorePage(
             exploreController: widget.exploreController,
           ),
+          PerfomacePage(
+            controller: widget.exerciceController,
+          ),
+          PerfomacePage(
+            controller: widget.exerciceController,
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -103,7 +111,7 @@ class _BasePageState extends State<BasePage> {
         onTap: (index) {
           setState(() {
             currentIndex = index;
-            // pageController.jumpToPage(index);
+            pageController.jumpToPage(index);
             pageController.animateToPage(index,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeIn);
@@ -124,7 +132,7 @@ class _BasePageState extends State<BasePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt_outlined),
-            label: 'Perfomace',
+            label: 'Meu Treino',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline_outlined),

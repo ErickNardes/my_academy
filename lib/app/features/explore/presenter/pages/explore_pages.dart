@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 import 'package:my_academy/app/features/explore/presenter/controller/explore_controller.dart';
+import 'package:my_academy/core/theme/theme_colors.dart';
 
 class ExplorePage extends StatefulWidget {
   final ExploreController exploreController;
@@ -42,14 +43,22 @@ class _ExplorePageState extends State<ExplorePage> {
                       fit: BoxFit.cover,
                     ),
                     Positioned(
-                      left: 20,
-                      bottom: 10,
-                      child: Text(
-                        category.name.toUpperCase(),
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: size.width * 0.06,
-                            fontFamily: 'Lato-Bold'),
+                      top: 0,
+                      child: Container(
+                        width: size.width,
+                        decoration: BoxDecoration(
+                          color: ThemeColors.backgroudColor,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: size.width * 0.02),
+                          child: Text(
+                            category.name.toUpperCase(),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: size.width * 0.06,
+                                fontFamily: 'Lato-Bold'),
+                          ),
+                        ),
                       ),
                     )
                   ],

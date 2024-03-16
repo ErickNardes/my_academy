@@ -31,4 +31,11 @@ class HasuraExercicesQuery {
     }
   }
 }''';
+
+  static const deleteExerciceWithDay =
+      r'''mutation MyMutation($id: Int!, $day: String!) {
+  delete_day_training_users(where: {id_exercice: {_eq: $id}, day: {_eq: $day}}) {
+    affected_rows
+  }
+}''';
 }

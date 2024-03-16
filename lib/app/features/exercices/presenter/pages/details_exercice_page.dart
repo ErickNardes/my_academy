@@ -103,119 +103,147 @@ class _DetailsExercicePageState extends State<DetailsExercicePage> {
                   return Visibility(
                     visible: !widget.exerciceController.state.isTrainingDay,
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ThemeColors.prymaryGreenColor,
+                      ),
                       onPressed: () {
                         showDialog(
                             barrierColor: Colors.grey.withOpacity(0.5),
                             context: context,
                             builder: (context) {
                               return SizedBox(
-                                height: 300,
                                 child: Dialog(
                                   backgroundColor: Colors.white,
                                   child: ValueListenableBuilder(
                                       valueListenable:
                                           widget.exerciceController.selectState,
                                       builder: (context, _, __) {
-                                        return Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            SizedBox(
-                                              height: size.width * 0.03,
-                                            ),
-                                            DropdownButton(
-                                                hint: Text(widget
-                                                    .exerciceController
-                                                    .state
-                                                    .daySelected),
-                                                items: DaysOfWeekEnum.values
-                                                    .map((e) {
-                                                  return DropdownMenuItem<
-                                                      DaysOfWeekEnum>(
-                                                    value: e,
-                                                    child: Text(
+                                        return Container(
+                                          width: size.width,
+                                          color: Colors.white,
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SizedBox(
+                                                height: size.width * 0.03,
+                                              ),
+                                              DropdownButton(
+                                                  hint: Text(widget
+                                                      .exerciceController
+                                                      .state
+                                                      .daySelected),
+                                                  items: DaysOfWeekEnum.values
+                                                      .map((e) {
+                                                    return DropdownMenuItem<
+                                                        DaysOfWeekEnum>(
+                                                      value: e,
+                                                      child: Text(
+                                                          DaysOfWeekEnumExtension
+                                                              .convertEnumToString(
+                                                                  e)),
+                                                    );
+                                                  }).toList(),
+                                                  onChanged: (v) {
+                                                    final text =
                                                         DaysOfWeekEnumExtension
                                                             .convertEnumToString(
-                                                                e)),
-                                                  );
-                                                }).toList(),
-                                                onChanged: (v) {
-                                                  final text =
-                                                      DaysOfWeekEnumExtension
-                                                          .convertEnumToString(
-                                                              v!);
-                                                  widget.exerciceController
-                                                      .setDaySelected(text);
-                                                  widget.exerciceController
-                                                      .setDayIndex(v.index);
-                                                }),
-                                            SizedBox(
-                                              height: size.width * 0.07,
-                                            ),
-                                            Image.network(exercice!.image),
-                                            SizedBox(
-                                              height: size.width * 0.07,
-                                            ),
-                                            Text(
-                                              exercice.name,
-                                              style: TextStyle(
-                                                fontFamily: 'Lato-Bold',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: size.width * 0.05,
+                                                                v!);
+                                                    widget.exerciceController
+                                                        .setDaySelected(text);
+                                                    widget.exerciceController
+                                                        .setDayIndex(v.index);
+                                                  }),
+                                              SizedBox(
+                                                height: size.width * 0.07,
                                               ),
-                                            ),
-                                            TextButton(
-                                                onPressed: () async {
-                                                  final params =
-                                                      InsertTrainingParams(
-                                                    idUser: user.state
-                                                        .userHasuraModel!.id,
-                                                    idExercice: exercice.id,
-                                                    day: widget
+                                              Image.network(
+                                                exercice.image,
+                                                repeat: ImageRepeat.noRepeat,
+                                              ),
+                                              SizedBox(
+                                                height: size.width * 0.07,
+                                              ),
+                                              Text(
+                                                exercice.name,
+                                                style: TextStyle(
+                                                  fontFamily: 'Lato-Bold',
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: size.width * 0.05,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: size.height * 0.02,
+                                              ),
+                                              ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                      backgroundColor:
+                                                          ThemeColors
+                                                              .backgroudColor),
+                                                  onPressed: () async {
+                                                    final params =
+                                                        InsertTrainingParams(
+                                                      idUser: user.state
+                                                          .userHasuraModel!.id,
+                                                      idExercice: exercice.id,
+                                                      day: widget
+                                                          .exerciceController
+                                                          .state
+                                                          .daySelected
+                                                          .toLowerCase(),
+                                                    );
+                                                    await widget
                                                         .exerciceController
-                                                        .state
-                                                        .daySelected
-                                                        .toLowerCase(),
-                                                  );
-                                                  await widget
-                                                      .exerciceController
-                                                      .insertTraining(params);
-                                                  final data = DateFormat(
-                                                      'EEEE', 'pt_BR');
+                                                        .insertTraining(params);
+                                                    final data = DateFormat(
+                                                        'EEEE', 'pt_BR');
 
-                                                  final dataParams =
-                                                      GetListExercicesDayParams(
-                                                    day: data
-                                                        .format(DateTime.now()),
-                                                    idUser: user.state
-                                                        .userHasuraModel!.id,
-                                                  );
-                                                  widget.exerciceController
-                                                      .getListExercicesWithDay(
-                                                          dataParams);
+                                                    final dataParams =
+                                                        GetListExercicesDayParams(
+                                                      day: data.format(
+                                                          DateTime.now()),
+                                                      idUser: user.state
+                                                          .userHasuraModel!.id,
+                                                    );
+                                                    widget.exerciceController
+                                                        .getListExercicesWithDay(
+                                                            dataParams);
 
-                                                  Navigator.pop(context);
+                                                    Navigator.pop(context);
 
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(const SnackBar(
-                                                          content: Text(
-                                                              'Treino Adicionado com Sucesso!!!')));
-                                                },
-                                                child: const Text(
-                                                    'Adicionar Treino')),
-                                            SizedBox(
-                                              height: size.width * 0.07,
-                                            ),
-                                          ],
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                            const SnackBar(
+                                                                content: Text(
+                                                                    'Treino Adicionado com Sucesso!!!')));
+                                                  },
+                                                  child: const Text(
+                                                    'Adicionar',
+                                                    style: TextStyle(
+                                                        color: ThemeColors
+                                                            .prymaryGreenColor),
+                                                  )),
+                                              SizedBox(
+                                                height: size.width * 0.07,
+                                              ),
+                                            ],
+                                          ),
                                         );
                                       }),
                                 ),
                               );
                             });
                       },
-                      child: Text('Adicionar Treino'),
+                      child: const Text(
+                        'Adicionar Treino',
+                        style: TextStyle(color: ThemeColors.backgroudColor),
+                      ),
                     ),
                   );
-                })
+                }),
+            SizedBox(
+              height: size.height * 0.02,
+            )
           ],
         ),
       ),
